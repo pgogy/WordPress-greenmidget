@@ -68,6 +68,33 @@
 			if(strpos($_POST['comment'],"[link=")!==FALSE){
 				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "[LINK");
 			}
+
+			$time_start = $_SESSION['page_load_time'];
+			unset($_SESSION['page_load_time']);
+
+			if((time() - $time_start)<8){
+				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "Page not read for long enough");
+			}
+
+			if($_SERVER['HTTP_REFERER'] == ""){
+				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "Referer empty");
+			}
+
+			$stopwords = explode(",", file_get_contents(dirname(__FILE__) . "/english_stopwords.txt"));
+			$stop = false;
+			foreach($stopwords as $stopword){
+				if(strpos($_POST['comment']," " . $stopword . " ")!==FALSE){
+					$stop = true;
+				}
+			}
+
+			if(!isset($_COOKIE['greenmidget'])){
+				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "No Cookie");
+			}
+
+			if(!$stop){
+				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "No English Stop Words");
+			}
 	
 			if(($total / (77534223 * strlen($email)) * 100)>8){
 				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "Email not english");
@@ -99,33 +126,6 @@
 					$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "Url not english");
 				}
 				
-			}
-	
-			$time_start = $_SESSION['page_load_time'];
-			unset($_SESSION['page_load_time']);
-
-			if((time() - $time_start)<8){
-				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "Page not read for long enough");
-			}
-
-			if($_SERVER['HTTP_REFERER'] == ""){
-				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "Referer empty");
-			}
-
-			$stopwords = explode(",", file_get_contents(dirname(__FILE__) . "/english_stopwords.txt"));
-			$stop = false;
-			foreach($stopwords as $stopword){
-				if(strpos($_POST['comment']," " . $stopword . " ")!==FALSE){
-					$stop = true;
-				}
-			}
-
-			if(!isset($_COOKIE['greenmidget'])){
-				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "No Cookie");
-			}
-
-			if(!$stop){
-				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "No English Stop Words");
 			}
 
 		}	
