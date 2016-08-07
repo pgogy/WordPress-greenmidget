@@ -57,6 +57,10 @@
 				$pointer++;
 			}
 		
+			if(trim($_POST['comment'])==""){
+				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "Comment empty");
+			}
+
 			if(!filter_var($_POST['email'], FILTER_VALIDATE_EMAIL)){
 				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "Not valid email");
 			}
