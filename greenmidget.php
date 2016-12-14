@@ -75,6 +75,10 @@
 		
 		function comment_catch($comment_id){
 
+			if(!isset($_POST['greenmidgetnoncescriptAJAX']) || isset($_POST['greenmidgetnoncescriptnoJS'])){
+				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "No nonces");
+			}
+
 			if(isset($_POST['greenmidgetnoncescriptAJAX'])){
 
 				if(!wp_verify_nonce($_POST['greenmidgetnoncescriptAJAX'], "greenmidgetnoncescriptAJAX")){
