@@ -13,7 +13,7 @@
 			add_action("pre_comment_on_post", array($this, "comment_catch"));
 			add_action("init", array($this, "comment_time"));
 			add_action("wp_ajax_greenmidget_comment_nonce", array($this, "comment_nonce"));
-			add_action("wp_ajax_no_priv_greenmidget_comment_nonce", array($this, "comment_nonce"));
+			add_action("wp_ajax_nopriv_greenmidget_comment_nonce", array($this, "comment_nonce"));
 			add_action('wp_enqueue_scripts', array($this, 'scripts'));
 			add_action('comment_form', array($this, 'comment_form'));
 		}
