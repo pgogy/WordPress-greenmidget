@@ -41,6 +41,7 @@
 		}
 
 		function comment_nonce() {
+
 			if(wp_verify_nonce($_POST['nonce'], "greenmidgetnoncescriptajax")){
 				echo wp_create_nonce("greenmidgetnoncescriptAJAX");
 			}
@@ -75,8 +76,12 @@
 		
 		function comment_catch($comment_id){
 
-			if(!isset($_POST['greenmidgetnoncescriptAJAX']) || isset($_POST['greenmidgetnoncescriptnoJS'])){
-				$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "No nonces");
+			if(isset($_SERVER)){
+				if(isset($_SERVER['HTTP_REFERER'])){
+					if(strpos($_SERVER['HTTP_REFERER'], $_POST['_wp_http_referer'])===FALSE){
+						$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "NO REFERER MATCH");
+					}
+				}
 			}
 
 			if(isset($_POST['greenmidgetnoncescriptAJAX'])){
