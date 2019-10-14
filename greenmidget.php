@@ -19,6 +19,14 @@
 		}
 
 		function comment_form(){
+		
+			$alphabet = "abcdefghijklmnopqrstuvwxyz";
+			$name = substr(str_shuffle($alphabet), 0, rand(10,20));
+			$class = substr(str_shuffle($alphabet), 0, rand(10,20));
+		
+			$_SESSION['name'] = $name;
+		
+			?><style>.<?PHP echo $class; ?>{display:none}</style><input type="textbox" class="<?PHP echo $class; ?>" name="<?PHP echo $name; ?>" /><?PHP
 			wp_nonce_field( 'greenmidgetnoncescriptnoJS', 'greenmidgetnoncescriptnoJS' );
 		}
 
@@ -98,6 +106,12 @@
 					$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "No normal nonce");
 				}
 
+			}
+
+			if(isset($_SESSION['name'])){
+				if(isset($_POST[$_SESSION['name']])){
+					$this->spam_comment($comment_id, $_SERVER['REMOTE_ADDR'], "Honeypot trap submitted");
+				}
 			}
 		
 			$email = substr($_POST['email'], 0, strpos($_POST['email'], "@"));
